@@ -52,13 +52,15 @@ int TBitField::GetLength(void) const // получить длину (к-во б�
 
 void TBitField::SetBit(const int n) // установить бит
 {
-	if ((n < 0) || (n>=BitLen))
+	if ( (n < 0) || (n>=BitLen) )
 		throw n;
 	pMem[GetMemIndex(n)] |= GetMemMask(n);
 }
 
 void TBitField::ClrBit(const int n) // очистить бит
 {
+	if ( (n < 0) || (n >= BitLen) )
+		throw n;
 	pMem[GetMemIndex(n)] &= ~GetMemMask(n);
 }
 
@@ -105,8 +107,14 @@ int TBitField::operator!=(const TBitField &bf) const // сравнение
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
-	TBitField tmp(BitLen);
+	int len = BitLen;
+	if (bf.BitLen > len)
+		len = bf.BitLen;
+	TBitField tmp(len);
 	for (int i = 0; i < MemLen; i++) {
+		tmp.pMem[i] = pMem[i];
+	}
+	for (int i = 0; i < bf.MemLen; i++) {
 		tmp.pMem[i] = pMem[i] | bf.pMem[i];
 	}
 	return tmp;
@@ -114,8 +122,14 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
-	TBitField tmp(BitLen);
+	int len = BitLen;
+	if (bf.BitLen > len)
+		len = bf.BitLen;
+	TBitField tmp(len);
 	for (int i = 0; i < MemLen; i++) {
+		tmp.pMem[i] = pMem[i];
+	}
+	for (int i = 0; i < bf.MemLen; i++) {
 		tmp.pMem[i] = pMem[i] & bf.pMem[i];
 	}
 	return tmp;
