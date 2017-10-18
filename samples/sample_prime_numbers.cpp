@@ -49,6 +49,15 @@ int main()
     }
   cout << endl;
   cout << "В первых " << n << " числах " << count << " простых" << endl;
+  const int size = 38;
+  TBitField bf(size), negBf(size), expNegBf(size);
+  bf.SetBit(35);
+  negBf = ~bf;
+
+  for(int i = 0; i < size; i++)
+    expNegBf.SetBit(i);
+  expNegBf.ClrBit(35);
+  cout<<bf<<"bf"<<endl<<negBf<<"negBf"<<endl<<expNegBf<<"expNegBf"<<endl;
 }
 #else
 
