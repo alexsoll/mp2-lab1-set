@@ -12,7 +12,7 @@ TBitField::TBitField(int len)
 	if  (len < 0)
 		throw len;
 	BitLen = len;
-	MemLen = (BitLen/ 8 * sizeof(TELEM)) + 1;
+	MemLen = (BitLen/ (8 * sizeof(TELEM))) + 1;
 	pMem = new TELEM[MemLen];
 	
 	for (int i = 0; i < MemLen; i++)
@@ -93,10 +93,9 @@ TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 int TBitField::operator==(const TBitField &bf) const // сравнение
 {
 	if (BitLen != bf.BitLen) return 0;
-	int i = 0;
-	for (i = 0; i < MemLen - 1; i++)
+	for (int i = 0; i < MemLen - 1; i++)
 		if (pMem[i] != bf.pMem[i]) return 0;
-	for (i = (MemLen - 1) * sizeof(TELEM); i < BitLen; i++)
+	for (int i = (MemLen - 1) * sizeof(TELEM) * 8; i < BitLen; i++)
 		if (GetBit(i) != bf.GetBit(i)) return 0;
 	return 1;
 }
@@ -108,7 +107,7 @@ int TBitField::operator!=(const TBitField &bf) const // сравнение
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
-	int maxlen, minlen, i;                         //   Протестировать позже
+	int maxlen, minlen, i;                         
 	if (BitLen >= bf.BitLen){
 
 		maxlen = BitLen;
@@ -153,7 +152,7 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
-	int maxlen, minlen, i;                            // Протестировать позже
+	int maxlen, minlen, i;                            
 	if (BitLen >= bf.BitLen) {
 		maxlen = BitLen;
 		minlen = bf.BitLen;
@@ -175,17 +174,20 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
+	/*TBitField tmp(BitLen);
+	for (int i = 0; i < MemLen - 1; i++) {
+		tmp.pMem[i] = ~pMem[i];
+	}
+	int index = (BitLen) % (sizeof(TELEM) * 8);
+	for (int i = 0; i < index; i++) {
+		if (!GetBit(i * (MemLen - 1)*sizeof(TELEM) *8))
+			tmp.SetBit(i * (MemLen - 1)*sizeof(TELEM) *8);
+	}
+	return tmp;*/
 	TBitField tmp(BitLen);
 	for (int i = 0; i < MemLen; i++) {
-		tmp.pMem[i] = ~(pMem[i]);
+		tmp.pMem[i] = ~pMem[i];
 	}
-	/*int index = BitLen - (MemLen - 1) * sizeof(TELEM) * 8;
-	for (int i = 0; i < index; i++) {
-		if (GetBit(i) == 1)
-			tmp.ClrBit(i);
-		else
-			tmp.SetBit(i);
-	}*/
 	return tmp;
 }
 

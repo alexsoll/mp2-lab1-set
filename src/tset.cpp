@@ -115,10 +115,20 @@ TSet TSet::operator~(void) // дополнение
 
 istream &operator>>(istream &istr, TSet &s) // ввод
 {
+	int i;
+	istr >> i;
+	while (i >= 0) {
+		if (i == 0) s.BitField.ClrBit(i);
+		else s.BitField.SetBit(i);
+		istr >> i;
+	}
 	return istr;
 }
 
 ostream& operator<<(ostream &ostr, const TSet &s) // вывод
 {
+	for (int i = 0; i < s.BitField.GetLength(); i++){
+		if (s.IsMember(i) == 1) ostr << i << " ";
+	}
 	return ostr;
 }
